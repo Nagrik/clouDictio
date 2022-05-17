@@ -1,7 +1,6 @@
 import { ThunkAction } from 'redux-thunk';
 import { CallHistoryMethodAction } from 'connected-react-router';
-
-import { State, Actions, api } from '@/store';
+import { Actions, api, State } from '@/store';
 
 type HistoryActions = CallHistoryMethodAction<[string, unknown?]> | CallHistoryMethodAction<[]>;
 

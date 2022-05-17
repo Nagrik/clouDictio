@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "",
-  "homepage" : "https://nagrik.github.io/init-ts-webpack",
+  "homepage": "https://nagrik.github.io/init-ts-webpack",
   "scripts": {
     "start": "cross-env NODE_ENV=development && cross-env PORT=3000 && webpack serve",
     "build": "cross-env NODE_ENV=production webpack",
@@ -16,6 +16,8 @@
   "author": "Roman Nahryshko",
   "license": "ISC",
   "dependencies": {
+    "@material-ui/core": "^4.12.4",
+    "@material-ui/styles": "^4.11.5",
     "@types/history": "^4.7.8",
     "@types/pusher-js": "^5.1.0",
     "axios": "^0.21.4",

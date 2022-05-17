@@ -1,27 +1,22 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+import { Route, Switch } from 'react-router-dom';
 
 import './global.css';
-import { useDispatch, useSelector } from 'react-redux';
-import { getTestInfo } from '@/store/actions/initial';
-import { selectTestData } from '@/store/selectors/initial';
+import LoginPage from '@/Pages/LoginPage';
+import AdminPage from '@/Pages/AdminPage';
+import ProtectedRouterAdmin from '@/Components/ProtectedRouterAdmin';
+import store from '@/store';
+import { getUserInfo } from '@/store/actions/user';
+import MainPage from '@/Pages/MainPage';
 
+store.dispatch<any>(getUserInfo());
 function App() {
-  const dispatch = useDispatch();
-  const selectInitialData = useSelector(selectTestData);
-
-  useEffect(() => {
-    dispatch(getTestInfo());
-  }, []);
-
   return (
-    <>
-      <div>
-        ИНИТ :Х
-      </div>
-      <div>
-        {JSON.stringify(selectInitialData)}
-      </div>
-    </>
+    <Switch>
+      <Route path="/login" component={LoginPage} />
+      <ProtectedRouterAdmin exact path="/" component={AdminPage} />
+      <ProtectedRouterAdmin path="/organization/:companyName/:companyId" component={MainPage} />
+    </Switch>
   );
 }
 

@@ -1,5 +1,10 @@
 import HttpClient from './http-client';
 
+export interface SendEmailBody {
+  email: string,
+  password: string
+}
+
 class Main extends HttpClient {
   private static instanceCached: Main;
 
@@ -15,7 +20,9 @@ class Main extends HttpClient {
     return Main.instanceCached;
   };
 
-  public refresh = (body:{ refreshToken: string }) => this.instance.post('/otp/refresh', body);
+  public refresh = (body:{ refreshToken: string }) => this.instance.post('/users/login/refresh', body);
+
+  public sendEmail = (body: SendEmailBody) => this.instance.post('/users/login', body);
 }
 
 export default Main;
