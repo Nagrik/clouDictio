@@ -14,6 +14,7 @@ import MainProtected from '@/api/main-protected';
 import { InitialActions } from '@/store/actions/login';
 import { userActionsType } from '@/store/actions/user';
 import { companyActionsType } from '@/store/actions/company';
+import MainProtectedFormData from '@/api/main-protected-formData';
 import loginReducer from './reducers/login';
 import userReducer from './reducers/user';
 import companyReducer from './reducers/company';
@@ -23,6 +24,7 @@ export const history = createBrowserHistory();
 export const api = {
   mainApi: Main.getInstance(),
   mainProtectedApi: MainProtected.getInstance(),
+  mainProtectedFormData: MainProtectedFormData.getInstance(),
 };
 
 const rootReducer = combineReducers({

@@ -19,6 +19,11 @@ export const selectInvalidDataMessage: Selector<State, string | null> = createSe
   ({ isInvalidDataMessage }) => isInvalidDataMessage,
 );
 
+export const selectIsEmailSent: Selector<State, boolean> = createSelector(
+  selectLogin,
+  ({ isEmailSent }) => isEmailSent,
+);
+
 export const selectIsLoading: Selector<State, boolean> = createSelector(
   selectLogin,
   ({ isLoading }) => isLoading,

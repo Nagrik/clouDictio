@@ -6,16 +6,17 @@ import { User } from '@/api/main-protected';
 import ArrowRightIcon from './common/icons/ArrowRightIcon';
 
 export interface ManagersTypes {
-  admins: User
+  admins: User,
+  companyId:string,
 }
 
 const Managers:FC<ManagersTypes> = (props) => {
   const classes = useStyles();
-  const { admins } = props;
+  const { admins, companyId } = props;
   const initials = admins.name.split(' ').map((word:string) => word[0]).join('');
   return (
     <>
-      <NavLink to={`/admin/${admins.id}`} className={classes.manager}>
+      <NavLink to={`/developer/${companyId}/${admins.id}`} className={classes.manager}>
         <div className={classes.manager__wrapper}>
           <div className={classes.avatar}>
             <span className={classes.avatar__letter}>{initials}</span>

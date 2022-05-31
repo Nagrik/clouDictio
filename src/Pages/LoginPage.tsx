@@ -6,22 +6,38 @@ import InvalidDataPopup from '@/Components/InvalidDataPopup';
 import styled from 'styled-components';
 import Button from '@/Components/common/Button';
 import { clearIsEmailInvalid, isInvalidDataClear, login } from '@/store/actions/login';
-import { selectInvalidDataMessage, selectIsInvalidData, selectIsLoggedIn } from '@/store/selectors/login';
+import {
+  selectInvalidDataMessage,
+  selectIsEmailSent,
+  selectIsInvalidData, selectIsLoading,
+  selectIsLoggedIn,
+} from '@/store/selectors/login';
+import Loader from '@/Components/Loader';
 
 const LoginPage = () => {
   const [email, setEmail] = useInput();
-  const [password, setPassword] = useInput();
   const dispatch = useDispatch();
   const history = useHistory();
   const [popup, setPopup] = useState(false);
+  const [invalidEmailText, setInvalidEmailText] = useState('Incorrect Email');
 
+  const isEmailSent = useSelector(selectIsEmailSent);
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const isInvalidData = useSelector(selectIsInvalidData);
   const InvalidDataMessage = useSelector(selectInvalidDataMessage);
+  const isLoading = useSelector(selectIsLoading);
+
+  function validateEmail(email:string) {
+    const re = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+    return re.test(String(email).toLowerCase());
+  }
 
   useEffect(() => {
     if (isLoggedIn) history.push('/');
   }, [isLoggedIn]);
+  useEffect(() => {
+    if (isEmailSent) history.push('/login-sent');
+  }, [isEmailSent]);
 
   useEffect(() => {
     if (isInvalidData) setPopup(true);
@@ -41,56 +57,57 @@ const LoginPage = () => {
     return () => clearTimeout(timer);
   }, [popup]);
   const handleSubmit = () => {
-    dispatch(login(email, password));
+    if (validateEmail(email)) {
+      dispatch(login(email));
+    } else {
+      setPopup(true);
+    }
   };
-
   return (
     <Root>
-      <Popup>
-        {
-          popup ? <InvalidDataPopup text={InvalidDataMessage} /> : null
-        }
-      </Popup>
-      <div>
-        <LoginWrapper>
-          <LoginContent>
-            <Title>Log in</Title>
-            <Input
-              type="text"
-              placeholder="Email"
-              required
-              onChange={setEmail}
-              autoComplete="on"
-            />
-            <Input2
-              type="password"
-              placeholder="Password"
-              required
-              onChange={setPassword}
-              autoComplete="on"
-            />
-            <Warning>
-              By clicking “login” you will receive a link for your
-              mail.
-              {' '}
-              <br />
-              {' '}
-              Check all your holders.
-            </Warning>
-            <ButtonWrapper>
-              <Button
-                onClick={handleSubmit}
-                disabledOnly={!email || !password}
-                height={40}
-                fontSize={15}
-                fontWeight={600}
-              >
-                Next
-              </Button>
-            </ButtonWrapper>
-          </LoginContent>
-        </LoginWrapper>
-      </div>
+      {
+        isLoading ? <Loader /> : (
+          <>
+            <Popup>
+              {popup ? <InvalidDataPopup text={InvalidDataMessage || invalidEmailText} /> : null}
+            </Popup>
+            <div>
+              <LoginWrapper>
+                <LoginContent>
+                  <Title>Log in</Title>
+                  <Input
+                    type="text"
+                    placeholder="Email"
+                    required
+                    onChange={setEmail}
+                    autoComplete="on"
+                  />
+                  <Warning>
+                    By clicking “next” you will receive a link for your
+                    mail.
+                    {' '}
+                    <br />
+                    {' '}
+                    Check all your holders.
+                  </Warning>
+                  <ButtonWrapper>
+                    <Button
+                      onClick={handleSubmit}
+                      disabledOnly={!email}
+                      height={40}
+                      fontSize={15}
+                      fontWeight={600}
+                    >
+                      Next
+                    </Button>
+                  </ButtonWrapper>
+                </LoginContent>
+              </LoginWrapper>
+            </div>
+          </>
+        )
+      }
+
     </Root>
   );
 };
@@ -107,7 +124,7 @@ const Root = styled.div`
 const LoginWrapper = styled.div`
   background: #fff;
   border-right: 10px;
-  padding: 100px 100px 250px 100px;
+  padding: 100px 100px 150px 100px;
   display: flex;
   justify-content: center;
 `;
@@ -176,6 +193,7 @@ const Warning = styled.p`
 const ButtonWrapper = styled.div`
   display: flex;
   justify-content: center;
+  margin-top: 46px;
 `;
 
 export default LoginPage;

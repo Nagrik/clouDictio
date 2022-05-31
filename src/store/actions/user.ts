@@ -4,7 +4,7 @@ import { push } from 'connected-react-router';
 import TokensLocalStorage from '@/local-storage/TokensLocalStorage';
 import { AsyncAction } from '@/store/actions/common';
 import { userReducer } from '@/store/reducers/user';
-import { loginActions } from '@/store/actions/login';
+import { loginActions, logout } from '@/store/actions/login';
 
 export const userActions = createActionCreators(userReducer);
 
@@ -18,9 +18,17 @@ export const getUserInfo = (): AsyncAction => async (
   { mainProtectedApi },
 ) => {
   try {
+    const storage = TokensLocalStorage.getInstance();
+    const refreshToken = storage.getRefreshToken();
+    if (!refreshToken) {
+      dispatch(logout());
+      dispatch(loginActions.setIsLoggedIn(false));
+      dispatch(loginActions.setIsLoading(false));
+      return;
+    }
+    dispatch(loginActions.setIsLoggedIn(true));
     const response = await mainProtectedApi.getUserInfo();
     dispatch(userActions.setUserInfo(response));
-    dispatch(loginActions.setIsLoggedIn(true));
     dispatch(loginActions.setIsLoading(false));
   } catch (e) {
     console.log(e);

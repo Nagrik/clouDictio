@@ -1,32 +1,45 @@
-import React, { FC } from 'react';
+import React from 'react';
 import styled, { keyframes } from 'styled-components';
 
-export interface Props {
-
+interface Props {
+  position?: boolean;
+  width?: string;
+  height?: string;
+  color?: string;
 }
 
-const LoaderStyles = styled.div`
+const LoaderDots: React.FC<Props> = ({ color }) => (
+  <LoaderStyled>
+    <Div color={color} />
+    <Div color={color} />
+    <Div color={color} />
+  </LoaderStyled>
+);
+
+const scale = keyframes`
+  0% {
+    transform: scale(1);
+    opacity: 1; 
+  }
+  24% {
+    transform: scale(0.72);
+    opacity: 0.3; 
+  }
+  48% {
+    transform: scale(1);
+    opacity: 1; 
+  }
+`;
+
+const LoaderStyled = styled.div`
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
 `;
-const scale = keyframes`
-0% {
-      transform: scale(1);
-      opacity: 1;
-    }
-24%{
-       transform: scale(0.72);
-       opacity: 0.3
-     }
-48% {
-       transform: scale(1);
-       opacity: 1;
-     }
-`;
+
 const Div = styled.div`
-  background-color:${({ color }) => color || '#252733'};
+  background-color:${({ color }) => color || '#ececec'};
   width: 10px;
   height: 10px;
   border-radius: 100%;
@@ -44,13 +57,5 @@ const Div = styled.div`
     animation: ${scale} 1.44s 0s infinite cubic-bezier(0, 0, .4, 1);
   }
 `;
-
-const LoaderDots:FC<Props> = (props) => (
-  <LoaderStyles>
-    <Div />
-    <Div />
-    <Div />
-  </LoaderStyles>
-);
 
 export default LoaderDots;

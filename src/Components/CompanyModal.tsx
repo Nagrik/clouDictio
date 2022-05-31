@@ -6,8 +6,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import useToggle from '@/components/hooks/useToggle';
 import CloseIcon from '@/Components/common/icons/CloseIcon';
 import { createCompany } from '@/store/actions/company';
-import { selectCreateCompanyError } from '@/store/selectors/company';
+import { selectCreateCompanyError, selectIsLoading, selectIsSuccess } from '@/store/selectors/company';
 import InvalidDataPopup from '@/Components/InvalidDataPopup';
+import LoaderDots from '@/Components/LoaderDots';
 
 export type Props = {
   closeModal: () => void;
@@ -25,19 +26,10 @@ const CreateCompanyModal:FC<Props> = ({
   const [isWorkSpaceEmpty, toggleIsWorkspaceEmpty] = useToggle();
   const [isReconciliationEmpty, toggleIsReconciliationEmpty] = useToggle();
   const [isAPIKeyEmpty, toggleIsAPIKeyEmpty] = useToggle();
-  const [popup, setPopup] = useState(false);
-
-  const [workspace, setWorkspace] = useInput();
+  const isLoading = useSelector(selectIsLoading);
   const [name, setName] = useInput();
-  const [APIKey, setAPIKey] = useInput();
 
   const handleCreateManager = () => {
-    if (!workspace) toggleIsWorkspaceEmpty(true);
-    if (!APIKey) toggleIsAPIKeyEmpty(true);
-    if (isNameEmpty
-            || isWorkSpaceEmpty
-            || isReconciliationEmpty
-            || isAPIKeyEmpty) return;
     dispatch(createCompany(name));
     modal(false);
   };
@@ -57,12 +49,12 @@ const CreateCompanyModal:FC<Props> = ({
 
             <div className={classes.XeroContent}>
               <h1 className={classes.Title}>
-                Add new company
+                Add new project
               </h1>
               <input
                 type="text"
                 className={classes.Input}
-                placeholder="Company name"
+                placeholder="Project name"
                 required
                 onChange={setName}
               />
@@ -74,7 +66,7 @@ const CreateCompanyModal:FC<Props> = ({
                   fontSize={15}
                   fontWeight={600}
                 >
-                  Next
+                  {isLoading ? <LoaderDots /> : 'Next'}
                 </Button>
               </div>
             </div>

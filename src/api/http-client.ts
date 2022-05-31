@@ -1,23 +1,18 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
-import TokensLocalStorage from '@/local-storage/TokensLocalStorage';
 import Main from '@/api/main';
-
-interface CustomResponse extends AxiosResponse<{
-  code: number;
-  data: any;
-  status: string;
-}> {}
+import store from '@/store';
+import TokensLocalStorage from '@/local-storage/TokensLocalStorage';
 
 abstract class HttpClient {
   protected readonly instance: AxiosInstance;
 
-  public constructor(baseURL: string | undefined) {
+  public constructor(baseURL: string | undefined, contentType = 'application/json') {
     this.instance = axios.create({
       baseURL,
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': contentType,
+        'Access-Control-Allow-Origin': '*',
       },
-      paramsSerializer: (args) => `${Object.entries(args).map(([key, value]) => `${key}=${value}`).join('&')}`,
     });
 
     this.initializeResponseInterceptor();
@@ -27,13 +22,16 @@ abstract class HttpClient {
     this.instance.interceptors.response.use(this.handleSuccessResponse, this.handleResponseError);
   };
 
-  private handleSuccessResponse = (response: CustomResponse) => response.data.data;
+  private handleSuccessResponse = (response: any) => response.data.data;
 
   private handleResponseError = async (e: any): Promise<any> => {
     const status = e.response ? e.response.status : null;
     const tokens = TokensLocalStorage.getInstance();
     const main = Main.getInstance();
     const currentRefreshToken = tokens.getRefreshToken();
+
+    // store.dispatch<any>(setErrorMessage(e.response.data));
+
     if (status === 401 && currentRefreshToken) {
       try {
         const { accessToken, refreshToken } = await main

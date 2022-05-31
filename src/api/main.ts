@@ -2,7 +2,10 @@ import HttpClient from './http-client';
 
 export interface SendEmailBody {
   email: string,
-  password: string
+}
+export interface SendValidateBody {
+  email: string,
+  otp: string
 }
 
 class Main extends HttpClient {
@@ -20,9 +23,11 @@ class Main extends HttpClient {
     return Main.instanceCached;
   };
 
-  public refresh = (body:{ refreshToken: string }) => this.instance.post('/users/login/refresh', body);
+  public refresh = (body:{ refreshToken: string }) => this.instance.post('/login/refresh', body);
 
-  public sendEmail = (body: SendEmailBody) => this.instance.post('/users/login', body);
+  public sendEmail = (body: SendEmailBody) => this.instance.post('/login', body);
+
+  public sendValidate = (body: SendValidateBody) => this.instance.post('/login/validate', body);
 }
 
 export default Main;

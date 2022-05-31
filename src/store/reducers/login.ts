@@ -5,13 +5,15 @@ export interface InitState {
   isInvalidData: boolean,
   isInvalidDataMessage: string | null,
   isLoading:boolean,
+  isEmailSent:boolean
 }
 
 const initialState: InitState = {
   isLoggedIn: false,
   isInvalidData: false,
   isInvalidDataMessage: null,
-  isLoading: true,
+  isLoading: false,
+  isEmailSent: false,
 };
 
 export class loginReducer extends ImmerReducer<InitState> {
@@ -34,6 +36,14 @@ export class loginReducer extends ImmerReducer<InitState> {
   isInvalidDataClear() {
     this.draftState.isInvalidData = false;
     this.draftState.isInvalidDataMessage = null;
+  }
+
+  setIsEmailSent(isEmailSent: boolean) {
+    this.draftState.isEmailSent = isEmailSent;
+  }
+
+  clearIsEmailSent() {
+    this.draftState.isEmailSent = false;
   }
 
   setIsLoading(isLoading: boolean) {

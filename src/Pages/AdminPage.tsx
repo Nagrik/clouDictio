@@ -13,12 +13,14 @@ import SearchIcon from '@/Components/common/icons/Searchicon';
 import CreateCompanyModal from '@/Components/CompanyModal';
 import CloseIcon from '@/Components/common/icons/CloseIcon';
 import { selectUserInfo } from '@/store/selectors/user';
-import { clearCreateCompanyError, getAdminCompanies } from '@/store/actions/company';
-import { selectAllAdminCompanies, selectCreateCompanyError } from '@/store/selectors/company';
+import { clearCreateCompanyError, getAdminCompanies, setIsLoading } from '@/store/actions/company';
+import { selectAllAdminCompanies, selectCreateCompanyError, selectIsSuccess } from '@/store/selectors/company';
 import InvalidDataPopup from '@/Components/InvalidDataPopup';
 import Company from '@/store/reducers/company';
 import Companies from '@/Components/Companies';
 import { Project } from '@/api/main-protected';
+import Popup from '@/Components/Popup';
+import { sort, SortOrder, SortType } from '@/utils/sortUtil';
 
 const AdminPage = () => {
   const classes = useStyles();
@@ -30,13 +32,15 @@ const AdminPage = () => {
   const allAdminCompanies = useSelector(selectAllAdminCompanies);
   const [inputValue, setInputValue] = useState('');
   const [popup, setPopup] = useState(false);
+  const [isChangeSuccess, toggleIsChangeSuccess] = useToggle();
   // const InvalidDataMessage = useSelector(selectInvalidDataMessage);
+
+  const createCompanyError = useSelector(selectCreateCompanyError);
+  const isSuccess = useSelector(selectIsSuccess);
 
   useEffect(() => {
     dispatch(getAdminCompanies());
   }, []);
-
-  const createCompanyError = useSelector(selectCreateCompanyError);
 
   useEffect(() => {
     if (createCompanyError) setPopup(true);
@@ -78,106 +82,136 @@ const AdminPage = () => {
     setSearchModal(false);
   });
 
+  useEffect(() => {
+    toggleIsChangeSuccess(isSuccess);
+  }, [isSuccess]);
+
+  const allProjectSorted = allAdminCompanies && [...allAdminCompanies].sort((a, b) => {
+    if (a.id > b.id) {
+      return -1;
+    }
+    if (a.id < b.id) {
+      return 1;
+    }
+    return 0;
+  });
+
   return (
     <>
       {
-        !allAdminCompanies ? (<Loader />) : (
+        !allProjectSorted || !user ? <Loader /> : (
           <>
-            <>
-              <div className={classes.container}>
-                <div className={classes.error}>
+            <div className={classes.container}>
+              <div className={classes.error}>
 
-                  {
+                {
                     popup ? <InvalidDataPopup text={createCompanyError} /> : null
                   }
-                </div>
-                <div className={classes.wrapper}>
-                  <div className={classes.content}>
-                    <Header user={user} />
-                    <div className={classes.content__wrapper}>
-                      <div className={classes.managers}>
-                        <div className={classes.leftWrapper}>
-                          <div className={classes.managers__title}>
-                            Companies
-                          </div>
-
+              </div>
+              <div className={classes.wrapper}>
+                <div className={classes.content}>
+                  <Header user={user} />
+                  <div className={classes.content__wrapper}>
+                    <div className={classes.managers}>
+                      <div className={classes.leftWrapper}>
+                        <div className={classes.managers__title}>
+                          Projects
                         </div>
-                        <div className={classes.companyWrapper}>
-                          <div className={classes.searchIcon} onClick={openSearchModal}>
-                            <SearchIcon width={20} height={20} />
-                          </div>
-                          <Button
-                            onClick={handleOpenAddManagerModal}
-                            height="32px"
-                            fontSize={12}
-                            fontWeight={600}
-                            flexDirection="row-reverse"
-                            color="#494c61"
-                          >
-                            ADD COMPANY
-                            <span className={classes.plus}>+</span>
-                          </Button>
+
+                      </div>
+                      <div className={classes.companyWrapper}>
+                        <div className={user.role === 'customer' ? classes.searchIcon : classes.searchIconSolo} onClick={openSearchModal}>
+                          <SearchIcon width={20} height={20} />
+                        </div>
+                        {
+                          user.role === 'customer' ? (
+                            <Button
+                              onClick={handleOpenAddManagerModal}
+                              height="32px"
+                              fontSize={12}
+                              fontWeight={600}
+                              flexDirection="row-reverse"
+                              color="#494c61"
+                            >
+                              ADD PROJECT
+                              <span className={classes.plus}>+</span>
+                            </Button>
+                          ) : null
+                        }
+
+                      </div>
+                    </div>
+                    {
+                      allProjectSorted.map((company: Project) => (
+                        <Companies key={company.id} company={company} />
+                      ))
+                      }
+                  </div>
+                </div>
+              </div>
+            </div>
+            {modal ? (
+              <CreateCompanyModal
+                modalRef={modalRef}
+                closeModal={handleCloseModal}
+                      // user={user}
+                modal={setModal}
+              />
+            ) : null}
+            {searchModal ? (
+              <div
+                className={classes.container__modal}
+              >
+                <div ref={modalSearchRef}>
+                  <div className={classes.XeroWrapper}>
+                    <div
+                      className={classes.close}
+                      onClick={closeSearchModal}
+                    >
+                      <CloseIcon color="#21272e" />
+                    </div>
+                    <div className={classes.XeroContent}>
+                      <h1 className={classes.Title}>
+                        Search
+                      </h1>
+                      <div>
+                        <div className={classes.search}>
+                          <SearchIcon />
+                          <input
+                            value={inputValue}
+                            onChange={(e) => setInputValue(e.target.value)}
+                            type="text"
+                            placeholder="Start typing the organization name..."
+                          />
                         </div>
                       </div>
-                      {
-                        allAdminCompanies && allAdminCompanies.map((company: Project) => (
-                          <Companies key={company.id} company={company} />
-                        ))
-                    }
+                      {searchItem.map((item, index) => (
+                        <div key={index} className={classes.companyWrapper}>
+                          <Companies key={index} company={item} />
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>
               </div>
-              {modal ? (
-                <CreateCompanyModal
-                  modalRef={modalRef}
-                  closeModal={handleCloseModal}
-                    // user={user}
-                  modal={setModal}
-                />
-              ) : null}
-              {searchModal ? (
-                <div
-                  className={classes.container__modal}
-                >
-                  <div ref={modalSearchRef}>
-                    <div className={classes.XeroWrapper}>
-                      <div
-                        className={classes.close}
-                        onClick={closeSearchModal}
-                      >
-                        <CloseIcon color="#21272e" />
-                      </div>
-                      <div className={classes.XeroContent}>
-                        <h1 className={classes.Title}>
-                          Search
-                        </h1>
-                        <div>
-                          <div className={classes.search}>
-                            <SearchIcon />
-                            <input
-                              value={inputValue}
-                              onChange={(e) => setInputValue(e.target.value)}
-                              type="text"
-                              placeholder="Start typing the organization name..."
-                            />
-                          </div>
-                        </div>
-                        {searchItem.map((item, index) => (
-                          <div key={index} className={classes.companyWrapper}>
-                            <Companies key={index} company={item} />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ) : null}
-            </>
+            ) : null}
+            <Popup
+              isActive={isChangeSuccess}
+              text="Project has been created"
+              style={{
+                maxWidth: '520px',
+                width: 'calc(100% - 32px)',
+                position: 'fixed',
+              }}
+              bottom={86}
+              padding={16}
+              autoClose={2000}
+              hide={toggleIsChangeSuccess}
+            />
           </>
+
         )
       }
-
     </>
   );
 };
@@ -217,6 +251,16 @@ const useStyles = makeStyles({
     alignItems: 'center',
     border: 'solid 1px #e0e1e2',
     marginRight: '8px',
+    cursor: 'pointer',
+  },
+  searchIconSolo: {
+    width: '30px',
+    height: '30px',
+    background: '#fbfbfb;',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    border: 'solid 1px #e0e1e2',
     cursor: 'pointer',
   },
   search: {

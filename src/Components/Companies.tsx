@@ -14,7 +14,7 @@ const Companies:FC<Props> = ({ company }:any) => {
   const classes = useStyles();
   return (
     <>
-      <NavLink to={`/organization/${company.name}/${company.id}`} className={classes.manager}>
+      <NavLink to={`/project/${company.name}/${company.id}`} className={classes.manager}>
         <div className={classes.manager__wrapper}>
           <div className={classes.avatar}>
             <Case color="#21272e" />
