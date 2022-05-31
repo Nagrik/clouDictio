@@ -1,3 +1,10 @@
 {
-  "routes": [{ "src": "/[^.]+", "dest": "/", "status": 200 }]
+  "routes": [
+    { "src": "/", "dest": "/" },
+    { "src": "/opt/:code/:email", "dest": "/" },
+    { "src": "/login-sent", "dest": "/" },
+    { "src": "/login", "dest": "/" },
+    { "src": "/project/:companyName/:companyId", "dest": "/" },
+    { "src": "/developer/:companyId/:developerI", "dest": "/" }
+  ]
 }
