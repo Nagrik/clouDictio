@@ -14,7 +14,6 @@ interface Props extends RouteComponentProps<{
 
 const OTP: React.FC<Props> = ({ match }) => {
   const { code, email } = match.params;
-  console.log(match.params);
   const dispatch = useDispatch();
   const classes = useStyles();
   const history = useHistory();
