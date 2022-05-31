@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import useToggle from '@/components/hooks/useToggle';
+import useToggle from '@/Components/hooks/useToggle';
 import search from '@/utils/search';
 import { useHistory } from 'react-router-dom';
 import useOnClickOutside from '@/Components/hooks/useOnClickOutside';

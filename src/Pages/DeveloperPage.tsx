@@ -3,17 +3,13 @@ import React, { FC, useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 
-import useOnClickOutside from '@/components/hooks/useOnClickOutside';
-import CloseIcon from '@/components/common/icons/CloseIcon';
-import SearchIcon from '@/components/common/icons/SearchIcon';
-import search from '@/utils/search';
-import Loader from '@/components/Loader';
-import Header from '@/components/Header';
-import Button from '@/components/common/Button';
+import useOnClickOutside from '@/Components/hooks/useOnClickOutside';
+import Loader from '@/Components/Loader';
+import Header from '@/Components/Header';
 
 import { makeStyles } from '@material-ui/styles';
-import useToggle from '@/components/hooks/useToggle';
-import useInput from '@/components/hooks/useInput';
+import useToggle from '@/Components/hooks/useToggle';
+import useInput from '@/Components/hooks/useInput';
 import {
   changeAdminInfo, clearCompanyInfo,
   clearDeveloperInfo, createAdmin, deleteDeveloper, getCompanyInfo, getCSV, getDeveloperInfo,
@@ -28,7 +24,7 @@ import Popup from '@/Components/Popup';
 import CheckCircle from '@/Components/common/icons/CheckCircle';
 import Circle from '@/Components/common/icons/Circle';
 import InvalidDataPopup from '@/Components/InvalidDataPopup';
-import LoaderDots from '@/components/common/LoaderDots';
+import LoaderDots from '@/Components/common/LoaderDots';
 
 interface Props extends RouteComponentProps<{
   developerId:string

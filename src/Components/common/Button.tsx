@@ -1,8 +1,6 @@
 import React, { FC } from 'react';
 import { Theme } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import { useSelector } from 'react-redux';
-import LoaderDots from '@/components/common/LoaderDots';
 
 export interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement>{
   height: string | number,

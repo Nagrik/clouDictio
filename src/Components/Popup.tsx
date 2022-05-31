@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { CSSTransition } from 'react-transition-group';
-import { HandleToggle } from '@/components/hooks/useToggle';
+import { HandleToggle } from '@/Components/hooks/useToggle';
 import { useDispatch } from 'react-redux';
 import { setIsSuccess } from '@/store/actions/company';
 

@@ -1,9 +1,9 @@
 import React, { FC, useEffect, useState } from 'react';
-import Button from '@/components/common/Button';
+import Button from '@/Components/common/Button';
 import { makeStyles } from '@material-ui/styles';
-import useInput from '@/components/hooks/useInput';
+import useInput from '@/Components/hooks/useInput';
 import { useDispatch, useSelector } from 'react-redux';
-import useToggle from '@/components/hooks/useToggle';
+import useToggle from '@/Components/hooks/useToggle';
 import CloseIcon from '@/Components/common/icons/CloseIcon';
 import { createCompany } from '@/store/actions/company';
 import { selectCreateCompanyError, selectIsLoading, selectIsSuccess } from '@/store/selectors/company';

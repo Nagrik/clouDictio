@@ -5,13 +5,13 @@ import React, {
 import { useDispatch, useSelector } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 
-import CloseIcon from '@/components/common/icons/CloseIcon';
-import useInput from '@/components/hooks/useInput';
-import useToggle from '@/components/hooks/useToggle';
-import Button from '@/components/common/Button';
-import Header from '@/components/Header';
+import CloseIcon from '@/Components/common/icons/CloseIcon';
+import useInput from '@/Components/hooks/useInput';
+import useToggle from '@/Components/hooks/useToggle';
+import Button from '@/Components/common/Button';
+import Header from '@/Components/Header';
 import { makeStyles } from '@material-ui/styles';
-import useOnClickOutside from '@/components/hooks/useOnClickOutside';
+import useOnClickOutside from '@/Components/hooks/useOnClickOutside';
 import {
   clearCompanyInfo,
   clearCreateCompanyError,

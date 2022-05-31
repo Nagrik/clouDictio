@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import useOnClickOutside from '@/components/hooks/useOnClickOutside';
+import useOnClickOutside from '@/Components/hooks/useOnClickOutside';
 import { makeStyles } from '@material-ui/styles';
 import { Theme } from '@material-ui/core';
 import { Project } from '@/api/main-protected';
